@@ -31,9 +31,27 @@ export default function GithubProvider({ children }) {
     dispatch({ type: "SET_LOADING" })
   }
 
+  async function fetchSearchResult() {
+    setLoading()
+    const response = fetch(`${GITHUB_URL}/search/icecrimu`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`
+      }
+    })
+
+    const data = await response.json()
+
+    dispatch({ type: "GET_USERS", payload: data })
+  }
+
   return (
     <GithubContext.Provider
-      value={{ users: state.users, isLoading: state.isLoading, fetchUsers }}
+      value={{
+        users: state.users,
+        isLoading: state.isLoading,
+        fetchUsers,
+        fetchSearchResult
+      }}
     >
       {children}
     </GithubContext.Provider>
