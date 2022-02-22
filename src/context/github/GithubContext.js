@@ -31,17 +31,20 @@ export default function GithubProvider({ children }) {
     dispatch({ type: "SET_LOADING" })
   }
 
-  async function fetchSearchResult() {
+  async function fetchSearchUsers(text) {
     setLoading()
-    const response = fetch(`${GITHUB_URL}/search/icecrimu`, {
+    const params = new URLSearchParams({
+      q: text
+    })
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`
       }
     })
 
-    const data = await response.json()
+    const { items } = await response.json()
 
-    dispatch({ type: "GET_USERS", payload: data })
+    dispatch({ type: "GET_USERS", payload: items })
   }
 
   return (
@@ -50,7 +53,7 @@ export default function GithubProvider({ children }) {
         users: state.users,
         isLoading: state.isLoading,
         fetchUsers,
-        fetchSearchResult
+        fetchSearchUsers
       }}
     >
       {children}
