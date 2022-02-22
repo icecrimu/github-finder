@@ -47,13 +47,18 @@ export default function GithubProvider({ children }) {
     dispatch({ type: "GET_USERS", payload: items })
   }
 
+  function handleClear() {
+    dispatch({ type: "CLEAR_USERS" })
+  }
+
   return (
     <GithubContext.Provider
       value={{
         users: state.users,
         isLoading: state.isLoading,
         fetchUsers,
-        fetchSearchUsers
+        fetchSearchUsers,
+        handleClear
       }}
     >
       {children}
