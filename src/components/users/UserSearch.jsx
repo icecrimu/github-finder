@@ -1,7 +1,7 @@
 import { useState, useContext } from "react"
 import { GithubContext } from "../../context/github/GithubContext"
 import { AlertContext } from "../../context/alert/AlertContext"
-import { fetchSearchUsers } from "../../context/github/GithubActions"
+import { getSearchUsers } from "../../context/github/GithubActions"
 
 export default function UserSearch() {
   const [text, setText] = useState("")
@@ -23,7 +23,7 @@ export default function UserSearch() {
       setAlert("Please enter something", "error")
     } else {
       dispatch({ type: "SET_LOADING" })
-      const users = await fetchSearchUsers(text)
+      const users = await getSearchUsers(text)
       dispatch({ type: "GET_USERS", payload: users })
       setText("")
     }
