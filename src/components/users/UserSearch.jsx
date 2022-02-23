@@ -5,12 +5,16 @@ import { fetchSearchUsers } from "../../context/github/GithubActions"
 
 export default function UserSearch() {
   const [text, setText] = useState("")
-  const { users, handleClear, dispatch } = useContext(GithubContext)
+  const { users, dispatch } = useContext(GithubContext)
 
   const { setAlert } = useContext(AlertContext)
 
   function handleChange(e) {
     setText(e.target.value)
+  }
+
+  function handleClear() {
+    dispatch({ type: "CLEAR_USERS" })
   }
   async function handleSubmit(e) {
     e.preventDefault()

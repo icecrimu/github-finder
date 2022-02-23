@@ -5,10 +5,10 @@ import { Link } from "react-router-dom"
 import Spinner from "../components/layout/Spinner"
 import { GithubContext } from "../context/github/GithubContext"
 import RepoList from "../components/repos/RepoList"
-
+import { fetchUser } from "../context/github/GithubActions"
+import { fetchRepos } from "../context/github/GithubActions"
 export default function User() {
-  const { fetchUser, user, isLoading, fetchRepos, repos } =
-    useContext(GithubContext)
+  const { user, isLoading, repos, dispatch } = useContext(GithubContext)
 
   const {
     name,
@@ -29,9 +29,29 @@ export default function User() {
 
   const params = useParams()
 
+  // Don't do this
+  // useEffect(async () => {
+  //   dispatch({ type: "SET_LOADING" })
+  //   const user = await fetchUser(params.login)
+  //   dispatch({ type: "GET_USER", payload: user })
+
+  //   dispatch({ type: "SET_LOADING" })
+  //   const repo = await fetchRepos(params.login)
+  //   dispatch({ type: "GET_REPOS", payload: repo })
+  // }, [])
+
+  // Do this instead
   useEffect(() => {
-    fetchUser(params.login)
-    fetchRepos(params.login)
+    async function effect() {
+      dispatch({ type: "SET_LOADING" })
+      const user = await fetchUser(params.login)
+      dispatch({ type: "GET_USER", payload: user })
+
+      dispatch({ type: "SET_LOADING" })
+      const repo = await fetchRepos(params.login)
+      dispatch({ type: "GET_REPOS", payload: repo })
+    }
+    effect()
   }, [])
 
   if (isLoading) {
