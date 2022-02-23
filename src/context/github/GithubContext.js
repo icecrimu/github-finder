@@ -34,22 +34,6 @@ export default function GithubProvider({ children }) {
     dispatch({ type: "SET_LOADING" })
   }
 
-  async function fetchSearchUsers(text) {
-    setLoading()
-    const params = new URLSearchParams({
-      q: text
-    })
-    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`
-      }
-    })
-
-    const { items } = await response.json()
-
-    dispatch({ type: "GET_USERS", payload: items })
-  }
-
   function handleClear() {
     dispatch({ type: "CLEAR_USERS" })
   }
@@ -93,15 +77,13 @@ export default function GithubProvider({ children }) {
   return (
     <GithubContext.Provider
       value={{
-        users: state.users,
-        user: state.user,
-        fetchUser,
-        isLoading: state.isLoading,
-        fetchUsers,
-        fetchSearchUsers,
-        handleClear,
-        repos: state.repos,
-        fetchRepos
+        ...state,
+        dispatch
+        // fetchUser,
+        // fetchUsers,
+        // fetchSearchUsers,
+        // handleClear,
+        // fetchRepos
       }}
     >
       {children}
