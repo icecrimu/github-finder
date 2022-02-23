@@ -47,7 +47,7 @@ export default function User() {
       dispatch({ type: "GET_USER_AND_REPOS", payload: userData })
     }
     effect()
-  }, [])
+  }, [dispatch, params])
 
   if (isLoading) {
     return <Spinner />
