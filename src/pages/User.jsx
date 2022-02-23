@@ -4,9 +4,11 @@ import { FaCodepen, FaStore, FaUserFriends, FaUsers } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import Spinner from "../components/layout/Spinner"
 import { GithubContext } from "../context/github/GithubContext"
+import RepoList from "../components/repos/RepoList"
 
 export default function User() {
-  const { fetchUser, user, isLoading } = useContext(GithubContext)
+  const { fetchUser, user, isLoading, fetchRepos, repos } =
+    useContext(GithubContext)
 
   const {
     name,
@@ -29,6 +31,7 @@ export default function User() {
 
   useEffect(() => {
     fetchUser(params.login)
+    fetchRepos(params.login)
   }, [])
 
   if (isLoading) {
@@ -157,6 +160,7 @@ export default function User() {
             </div>
           </div>
         </div>
+        <RepoList repos={repos} />
       </div>
     </>
   )

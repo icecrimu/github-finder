@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer } from "react"
+import { createRenderer } from "react-dom/test-utils"
 import githubReducer from "./GithubReducer"
 
 export const GithubContext = React.createContext()
@@ -10,7 +11,8 @@ export default function GithubProvider({ children }) {
   const initialState = {
     users: [],
     user: {},
-    isLoading: false
+    isLoading: false,
+    repos: []
   }
 
   const [state, dispatch] = useReducer(githubReducer, initialState)
@@ -69,6 +71,25 @@ export default function GithubProvider({ children }) {
     }
   }
 
+  async function fetchRepos(login) {
+    setLoading()
+    const params = new URLSearchParams({
+      sort: "createRenderer",
+      per_page: 10
+    })
+    const response = await fetch(
+      `${GITHUB_URL}/users/${login}/repos?${params}`,
+      {
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`
+        }
+      }
+    )
+    const data = await response.json()
+
+    dispatch({ type: "GET_REPOS", payload: data })
+  }
+
   return (
     <GithubContext.Provider
       value={{
@@ -78,7 +99,9 @@ export default function GithubProvider({ children }) {
         isLoading: state.isLoading,
         fetchUsers,
         fetchSearchUsers,
-        handleClear
+        handleClear,
+        repos: state.repos,
+        fetchRepos
       }}
     >
       {children}
